@@ -1,15 +1,21 @@
 import cutter
 
-from . import manager
+from PySide2.QtWidgets import QAction
+
+from .manager import JupyterManager
+from .widget import JupyterWidget
+
 
 class JupyterPlugin(cutter.CutterPlugin):
     def setupPlugin(self):
-        self._jupyter_manager = manager.JupyterManager()
-        self.notebook_app = self._jupyter_manager.start_jupyter()
-        print("STARTED: {}".format(self.notebook_app.url_with_token))
+        self._jupyter_manager = JupyterManager()
+        self._jupyter_manager.start()
 
     def setupInterface(self, main):
-        pass
+        action = QAction("Jupyter", main)
+        action.setCheckable(True)
+        widget = JupyterWidget(self._jupyter_manager, main, action)
+        main.addPluginDockWidget(widget, action)
 
     def terminate(self):
-        pass
+        self._jupyter_manager.stop()

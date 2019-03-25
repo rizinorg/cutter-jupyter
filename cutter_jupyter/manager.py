@@ -8,6 +8,7 @@ from jupyter_client.ioloop import IOLoopKernelManager
 
 from . import nested_kernel
 
+
 class CutterInternalIPyKernelManager(IOLoopKernelManager):
     def start_kernel(self, **kw):
         self.write_connection_file()
@@ -37,7 +38,6 @@ class CutterInternalIPyKernelManager(IOLoopKernelManager):
 
     def signal_kernel(self, signum):
         self.kernel.send_signal(signum)
-
 
 
 def kernel_manager_factory(kernel_name, **kwargs):
@@ -91,7 +91,11 @@ class CutterNotebookApp(NotebookApp):
 
 
 class JupyterManager:
-    def start_jupyter(self):
+    def __init__(self):
+        self._thread = None
+        self.app = None
+
+    def start(self):
         q = queue.Queue()
 
         def start_jupyter_async():
@@ -109,5 +113,11 @@ class JupyterManager:
             q.put(app)
             app.start()
 
-        threading.Thread(target=start_jupyter_async).start()
-        return q.get()
+        self._thread = threading.Thread(target=start_jupyter_async)
+        self._thread.start()
+        self.app = q.get()
+
+    def stop(self):
+        self.app.stop()
+        self._thread.join()
+
