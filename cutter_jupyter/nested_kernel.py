@@ -56,7 +56,7 @@ class CutterIPythonKernel(IPythonKernel):
 class CutterIPKernelApp(IPKernelApp):
     def init_signal(self):
         # This would call signal.signal(signal.SIGINT, signal.SIG_IGN)
-        # Not needed in supinterpreter.
+        # Not needed in for us.
         pass
 
     def log_connection_info(self):

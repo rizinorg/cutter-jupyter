@@ -6,15 +6,10 @@ from PySide2.QtGui import QIcon
 from PySide2.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QTabWidget, QPushButton
 
 try:
-    from PySide2.QtWebEngine import QtWebEngine
     from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
-    webengine_available = False
+    webengine_available = True
 except ImportError:
     webengine_available = False
-
-if webengine_available:
-    QtWebEngine.initialize()
-
 
 from .autogen import icons_rc # not unused! need to register the resources.
 
@@ -50,7 +45,6 @@ class JupyterWidget(cutter.CutterDockWidget):
         self._home_button.clicked.connect(self._open_home_tab)
         self._tab_widget.tabCloseRequested.connect(self._tab_close_requested)
 
-
     def _setup_ui_without_webengine(self):
         self._clear_tabs()
 
@@ -70,7 +64,7 @@ class JupyterWidget(cutter.CutterDockWidget):
         layout.setAlignment(label, Qt.AlignCenter)
 
         self._tab_widget.addTab(page, "Jupyter")
-        self._tab_widget.setTabsClosable(True) # TODO: False
+        self._tab_widget.setTabsClosable(False)
 
     def _setup_ui_with_webengine(self):
         self._clear_tabs()
@@ -105,8 +99,8 @@ class JupyterWidget(cutter.CutterDockWidget):
 
     def _remove_tab(self, index):
         widget = self._tab_widget.widget(index)
-        self._tab_widget.removeTab(widget)
-        #widget.setParent(None)
+        self._tab_widget.removeTab(index)
+        widget.setParent(None)
 
 
 class JupyterWebView(QWebEngineView):

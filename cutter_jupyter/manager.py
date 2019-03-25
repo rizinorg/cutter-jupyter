@@ -28,10 +28,6 @@ class CutterInternalIPyKernelManager(IOLoopKernelManager):
 
         # launch the kernel subprocess
         self.kernel = nested_kernel.launch_ipykernel(kernel_cmd)
-        # old id = cutter_internal.launch_ipykernel(kernel_cmd, env=env, **kw)
-        # old self.kernel = IPyKernelInterfaceJupyter(id)
-        # self._launch_kernel(kernel_cmd, env=env, **kw)
-
 
         self.start_restarter()
         self._connect_control_socket()
