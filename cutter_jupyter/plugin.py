@@ -7,6 +7,11 @@ from .widget import JupyterWidget
 
 
 class JupyterPlugin(cutter.CutterPlugin):
+    name = "Jupyter"
+    description = "Jupyter Integration"
+    version = "1.0"
+    author = "thestr4ng3r"
+
     def setupPlugin(self):
         self._jupyter_manager = JupyterManager()
         self._jupyter_manager.start()
