@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="cutter_jupyter">
+    <file>home.svg</file>
+  </qresource>
+</RCC>
