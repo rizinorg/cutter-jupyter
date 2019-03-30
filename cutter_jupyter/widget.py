@@ -102,28 +102,29 @@ class JupyterWidget(cutter.CutterDockWidget):
         self._tab_widget.removeTab(index)
         widget.setParent(None)
 
+if webengine_available:
+	class JupyterWebView(QWebEngineView):
+	    def __init__(self, jupyter_widget, parent):
+	        super(JupyterWebView, self).__init__(parent)
+	        self._jupyter_widget = jupyter_widget
+	        self._tab_widget = None
 
-class JupyterWebView(QWebEngineView):
-    def __init__(self, jupyter_widget, parent):
-        super(JupyterWebView, self).__init__(parent)
-        self._jupyter_widget = jupyter_widget
-        self._tab_widget = None
+	        self.titleChanged.connect(self._update_title)
+	        self._update_title()
 
-        self.titleChanged.connect(self._update_title)
-        self._update_title()
+	    def set_tab_widget(self, tab_widget):
+	        self._tab_widget = tab_widget
+	        self._update_title()
 
-    def set_tab_widget(self, tab_widget):
-        self._tab_widget = tab_widget
-        self._update_title()
+	    def _update_title(self):
+	        if self._tab_widget is None:
+	            return
+	        title = self.title()
+	        if title is None:
+	            title = "Jupyter"
+	        self._tab_widget.setTabText(self._tab_widget.indexOf(self), title)
 
-    def _update_title(self):
-        if self._tab_widget is None:
-            return
-        title = self.title()
-        if title is None:
-            title = "Jupyter"
-        self._tab_widget.setTabText(self._tab_widget.indexOf(self), title)
+	    def createWindow(self, type, *args, **kwargs):
+	        if type == QWebEnginePage.WebBrowserTab:
+	            return self._jupyter_widget.create_new_tab()
 
-    def createWindow(self, type, *args, **kwargs):
-        if type == QWebEnginePage.WebBrowserTab:
-            return self._jupyter_widget.create_new_tab()
