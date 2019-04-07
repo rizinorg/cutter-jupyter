@@ -7,8 +7,11 @@ from PySide2.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QTabWid
 
 try:
     from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+    import os
+    if os.name == 'nt' and not (os.access('QtWebEngineProcess.exe', os.F_OK) and os.access('resources\\icudtl.dat', os.F_OK)):
+        raise FileNotFoundError()
     webengine_available = True
-except ImportError:
+except (ImportError, FileNotFoundError):
     webengine_available = False
 
 from .autogen import icons_rc # not unused! need to register the resources.
